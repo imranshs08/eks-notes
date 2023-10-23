@@ -365,3 +365,27 @@ Output
 2023-10-23 13:58:39 [ℹ]  will delete 1 nodegroups from auth ConfigMap in cluster "EKS-course-cluster"
 2023-10-23 13:58:39 [ℹ]  removing identity "arn:aws:iam::980779205835:role/eksctl-EKS-course-cluster-nodegrou-NodeInstanceRole-0MkWS3rJb3mm" from auth ConfigMap (username = "system:node:{{EC2PrivateDNSName}}", groups = ["system:bootstrappers" "system:nodes"])
 2023-10-23 13:58:40 [✔]  deleted 1 nodegroup(s) from cluster "EKS-course-cluster"
+
+
+kubectl get nodes
+NAME                                           STATUS   ROLES    AGE   VERSION
+ip-192-168-43-48.us-west-2.compute.internal    Ready    <none>   21m   v1.27.5-eks-43840fb
+ip-192-168-80-89.us-west-2.compute.internal    Ready    <none>   22m   v1.27.5-eks-43840fb
+ip-192-168-86-249.us-west-2.compute.internal   Ready    <none>   20m   v1.27.5-eks-43840fb
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Lec 14 - Cluster AutoScaler Part 2
+
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/autoscaler/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+
+Annoation 
+
+kubectl -n kube-system annotate deployment.apps/cluster-autoscaler cluster-autoscaler.kubernetes.io/safe-to-evict="false"
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Lec 15 - Deploying nginx for Testing AutoScaler
+
+
