@@ -388,4 +388,54 @@ kubectl -n kube-system annotate deployment.apps/cluster-autoscaler cluster-autos
 
 # Lec 15 - Deploying nginx for Testing AutoScaler
 
+# Create nginx Deployment and scale it up/down
+
+File : nginx-deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-autoscaler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        service: nginx
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: test-autoscaler
+        resources:
+          limits:
+            cpu: 300m
+            memory: 512Mi
+          requests:
+            cpu: 300m
+            memory: 512Mi
+      nodeSelector:
+        instance-type: spot
+		
+kubectl apply -f nginx-deployment.yaml
+
+deployment.apps/test-autoscaler created
+
+kubectl get pods
+NAME                              READY   STATUS    RESTARTS   AGE
+test-autoscaler-65bf567f5-jbdcm   1/1     Running   0          56s
+
+kubectl get nodes -l instance-type=spot
+NAME                                           STATUS   ROLES    AGE    VERSION
+ip-192-168-86-249.us-west-2.compute.internal   Ready    <none>   138m   v1.27.5-eks-43840fb
+
+kubectl scale --replicas=3 deployment/test-autoscaler
+deployment.apps/test-autoscaler scaled
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Lec 16
 
