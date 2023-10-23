@@ -104,7 +104,7 @@ nodeGroups:
 	  
 Command
 
-ksctl create nodegroup --config-file=eks-cluster.yml --include='ng-mixed'
+eksctl create nodegroup --config-file=eks-cluster.yml --include='ng-mixed'
 
 Output 
 
@@ -174,7 +174,194 @@ Responsible for Dynamically scale the Nodes within a nodegroup - in and out
 		* nodegroup with single AZ --> For Stateful workloads
 		* nodegroup multi AZ --------> For Stateless workloads
     # Mixuture of OnDemand & SpotInstances possible.
-	
-	
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Lec 13 - Cluster AutoScaler Part 1
+
+	# Create a dedicated nodegroups with Autoscaling enabled
+		* 2 nodegroups with single AZ (e.g. for stateful workloads)
+		* 1 nodegroups across 3 AZs using spot instances (e.g. for stateless workloads)
+	# Deploy the AutoScaler
+		* Create deployment
+		* Add annotation to the deployment to prevent from being evicted
+		* Set matching image version and cluster name in Deployment
+	# Create nginx Deployment and scale it up/down
+	# View autoscaler logs
 
 
+File : eks-course.yaml
+
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: EKS-course-cluster
+  region: us-west-2
+
+nodeGroups:
+  - name: scale-west2c
+    instanceType: t2.small
+    desiredCapacity: 1
+    maxSize: 10
+    availabilityZones: ["us-west-2c"]
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+    labels:
+      nodegroup-type: stateful-west2c
+      instance-type: onDemand
+    ssh: # use existing EC2 key
+      publicKeyName: eks-course
+  - name: scale-west2a
+    instanceType: t2.small
+    desiredCapacity: 1
+    maxSize: 10
+    availabilityZones: ["us-west-2a"]
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+    labels:
+      nodegroup-type: stateful-west1a
+      instance-type: onDemand
+    ssh: # use existing EC2 key
+      publicKeyName: eks-course
+  - name: scale-spot
+    desiredCapacity: 1
+    maxSize: 10
+    instancesDistribution:
+      instanceTypes: ["t2.small", "t3.small"]
+      onDemandBaseCapacity: 0
+      onDemandPercentageAboveBaseCapacity: 0
+    availabilityZones: ["us-west-2c", "us-west-2b"]
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+    labels:
+      nodegroup-type: stateless-workload
+      instance-type: spot
+    ssh: 
+      publicKeyName: eks-course
+
+availabilityZones: ["us-west-2c", "us-west-2b"]
+
+Command 
+
+ eksctl create nodegroup --config-file=eks-course.yaml 
+ 
+Output 
+
+023-10-23 13:31:20 [ℹ]  will use version 1.27 for new nodegroup(s) based on control plane version
+2023-10-23 13:32:50 [ℹ]  nodegroup "scale-west2c" will use "ami-084cf519d356bb718" [AmazonLinux2/1.27]
+2023-10-23 13:32:51 [ℹ]  using EC2 key pair "eks-course"
+2023-10-23 13:32:52 [ℹ]  nodegroup "scale-west2a" will use "ami-084cf519d356bb718" [AmazonLinux2/1.27]
+2023-10-23 13:32:52 [ℹ]  using EC2 key pair "eks-course"
+2023-10-23 13:32:53 [ℹ]  nodegroup "scale-spot" will use "ami-084cf519d356bb718" [AmazonLinux2/1.27]
+2023-10-23 13:32:54 [ℹ]  using EC2 key pair "eks-course"
+2023-10-23 13:33:21 [ℹ]  1 existing nodegroup(s) (ng-1) will be excluded
+2023-10-23 13:33:21 [ℹ]  3 nodegroups (scale-spot, scale-west2a, scale-west2c) were included (based on the include/exclude rules)
+2023-10-23 13:33:21 [ℹ]  will create a CloudFormation stack for each of 3 nodegroups in cluster "EKS-course-cluster"
+2023-10-23 13:33:21 [ℹ]  
+2 sequential tasks: { fix cluster compatibility, 1 task: {
+3 parallel tasks: { create nodegroup "scale-west2c", create nodegroup "scale-west2a", create nodegroup "scale-spot"
+} }
+}
+2023-10-23 13:33:21 [ℹ]  checking cluster stack for missing resources
+2023-10-23 13:33:24 [ℹ]  cluster stack has all required resources
+2023-10-23 13:33:25 [ℹ]  building nodegroup stack "eksctl-EKS-course-cluster-nodegroup-scale-spot"
+2023-10-23 13:33:25 [ℹ]  building nodegroup stack "eksctl-EKS-course-cluster-nodegroup-scale-west2c"
+2023-10-23 13:33:25 [ℹ]  building nodegroup stack "eksctl-EKS-course-cluster-nodegroup-scale-west2a"
+2023-10-23 13:33:25 [ℹ]  --nodes-min=1 was set automatically for nodegroup scale-west2a
+2023-10-23 13:33:25 [ℹ]  --nodes-min=1 was set automatically for nodegroup scale-west2c
+2023-10-23 13:33:25 [ℹ]  --nodes-min=1 was set automatically for nodegroup scale-spot
+2023-10-23 13:33:27 [ℹ]  deploying stack "eksctl-EKS-course-cluster-nodegroup-scale-west2c"
+2023-10-23 13:33:28 [ℹ]  deploying stack "eksctl-EKS-course-cluster-nodegroup-scale-west2a"
+2023-10-23 13:33:28 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-west2c"
+2023-10-23 13:33:29 [ℹ]  deploying stack "eksctl-EKS-course-cluster-nodegroup-scale-spot"
+2023-10-23 13:33:29 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-west2a"
+2023-10-23 13:33:29 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-spot"
+2023-10-23 13:33:58 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-west2c"
+2023-10-23 13:33:59 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-west2a"
+2023-10-23 13:34:00 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-spot"
+2023-10-23 13:34:32 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-west2a"
+2023-10-23 13:35:15 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-west2c"
+2023-10-23 13:35:15 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-spot"
+2023-10-23 13:35:15 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-west2a"
+2023-10-23 13:36:56 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-spot"
+2023-10-23 13:36:56 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-west2c"
+2023-10-23 13:36:56 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-west2a"
+2023-10-23 13:38:44 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-west2a"
+2023-10-23 13:38:44 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-scale-west2c"
+2023-10-23 13:38:45 [ℹ]  no tasks
+2023-10-23 13:39:06 [ℹ]  adding identity "arn:aws:iam::980779205835:role/eksctl-EKS-course-cluster-nodegrou-NodeInstanceRole-ffu9TCudClaC" to auth ConfigMap
+2023-10-23 13:39:07 [ℹ]  nodegroup "scale-west2c" has 0 node(s)
+2023-10-23 13:39:07 [ℹ]  waiting for at least 1 node(s) to become ready in "scale-west2c"
+2023-10-23 13:39:52 [ℹ]  nodegroup "scale-west2c" has 1 node(s)
+2023-10-23 13:39:52 [ℹ]  node "ip-192-168-80-89.us-west-2.compute.internal" is ready
+2023-10-23 13:39:53 [ℹ]  adding identity "arn:aws:iam::980779205835:role/eksctl-EKS-course-cluster-nodegrou-NodeInstanceRole-PC6QLtCC8YTx" to auth ConfigMap
+2023-10-23 13:39:54 [ℹ]  nodegroup "scale-west2a" has 0 node(s)
+2023-10-23 13:39:54 [ℹ]  waiting for at least 1 node(s) to become ready in "scale-west2a"
+2023-10-23 13:40:58 [ℹ]  nodegroup "scale-west2a" has 1 node(s)
+2023-10-23 13:40:58 [ℹ]  node "ip-192-168-43-48.us-west-2.compute.internal" is ready
+2023-10-23 13:40:58 [ℹ]  adding identity "arn:aws:iam::980779205835:role/eksctl-EKS-course-cluster-nodegrou-NodeInstanceRole-hd3iwE3cqkEq" to auth ConfigMap
+2023-10-23 13:40:59 [ℹ]  nodegroup "scale-spot" has 0 node(s)
+2023-10-23 13:40:59 [ℹ]  waiting for at least 1 node(s) to become ready in "scale-spot"
+2023-10-23 13:42:15 [ℹ]  nodegroup "scale-spot" has 1 node(s)
+2023-10-23 13:42:15 [ℹ]  node "ip-192-168-86-249.us-west-2.compute.internal" is ready
+2023-10-23 13:42:15 [✔]  created 3 nodegroup(s) in cluster "EKS-course-cluster"
+2023-10-23 13:42:15 [✔]  created 0 managed nodegroup(s) in cluster "EKS-course-cluster"
+2023-10-23 13:42:42 [ℹ]  checking security group configuration for all nodegroups
+2023-10-23 13:42:42 [ℹ]  all nodegroups have up-to-date cloudformation templates
+
+
+Get to list of nodes
+
+kubectl get nodes
+NAME                                           STATUS   ROLES    AGE     VERSION
+ip-192-168-24-18.us-west-2.compute.internal    Ready    <none>   74m     v1.27.5-eks-43840fb
+ip-192-168-41-19.us-west-2.compute.internal    Ready    <none>   74m     v1.27.5-eks-43840fb
+ip-192-168-43-48.us-west-2.compute.internal    Ready    <none>   4m47s   v1.27.5-eks-43840fb
+ip-192-168-80-89.us-west-2.compute.internal    Ready    <none>   5m32s   v1.27.5-eks-43840fb
+ip-192-168-85-127.us-west-2.compute.internal   Ready    <none>   16h     v1.27.5-eks-43840fb
+ip-192-168-86-249.us-west-2.compute.internal   Ready    <none>   3m40s   v1.27.5-eks-43840fb
+
+Delete ng-1 node group 
+
+eksctl delete nodegroup -f eks-cluster.yml --include="ng-1"
+
+Output
+
+2023-10-23 13:55:27 [ℹ]  comparing 2 nodegroups defined in the given config ("eks-cluster.yml") against remote state
+2023-10-23 13:55:27 [ℹ]  combined include rules: ng-1
+2023-10-23 13:55:27 [ℹ]  1 nodegroup (ng-1) was included (based on the include/exclude rules)
+2023-10-23 13:55:52 [ℹ]  (plan) would drain 1 nodegroup(s) in cluster "EKS-course-cluster"
+2023-10-23 13:55:52 [ℹ]  starting parallel draining, max in-flight of 1
+2023-10-23 13:55:52 [ℹ]  (plan) would delete 1 nodegroups from cluster "EKS-course-cluster"
+2023-10-23 13:55:55 [ℹ]  1 task: { 1 task: { delete nodegroup "ng-1" [async] } }
+2023-10-23 13:55:55 [ℹ]  (plan) would delete 1 nodegroups from auth ConfigMap in cluster "EKS-course-cluster"
+2023-10-23 13:55:55 [✔]  (plan) would have deleted 1 nodegroup(s) from cluster "EKS-course-cluster"
+2023-10-23 13:55:55 [!]  no changes were applied, run again with '--approve' to apply the changes
+
+--approve to apply changes
+
+Command
+
+eksctl delete nodegroup -f eks-cluster.yml --include="ng-1" --approve
+
+Output
+
+2023-10-23 13:56:55 [ℹ]  comparing 2 nodegroups defined in the given config ("eks-cluster.yml") against remote state
+2023-10-23 13:56:55 [ℹ]  combined include rules: ng-1
+2023-10-23 13:56:55 [ℹ]  1 nodegroup (ng-1) was included (based on the include/exclude rules)
+2023-10-23 13:57:20 [ℹ]  will drain 1 nodegroup(s) in cluster "EKS-course-cluster"
+2023-10-23 13:57:20 [ℹ]  starting parallel draining, max in-flight of 1
+2023-10-23 13:57:42 [ℹ]  cordon node "ip-192-168-24-18.us-west-2.compute.internal"
+2023-10-23 13:57:43 [ℹ]  cordon node "ip-192-168-41-19.us-west-2.compute.internal"
+2023-10-23 13:57:43 [ℹ]  cordon node "ip-192-168-85-127.us-west-2.compute.internal"
+2023-10-23 13:58:14 [✔]  drained all nodes: [ip-192-168-41-19.us-west-2.compute.internal ip-192-168-85-127.us-west-2.compute.internal ip-192-168-24-18.us-west-2.compute.internal]
+2023-10-23 13:58:14 [ℹ]  will delete 1 nodegroups from cluster "EKS-course-cluster"
+2023-10-23 13:58:38 [ℹ]  1 task: { 1 task: { delete nodegroup "ng-1" [async] } }
+2023-10-23 13:58:39 [ℹ]  will delete stack "eksctl-EKS-course-cluster-nodegroup-ng-1"
+2023-10-23 13:58:39 [ℹ]  will delete 1 nodegroups from auth ConfigMap in cluster "EKS-course-cluster"
+2023-10-23 13:58:39 [ℹ]  removing identity "arn:aws:iam::980779205835:role/eksctl-EKS-course-cluster-nodegrou-NodeInstanceRole-0MkWS3rJb3mm" from auth ConfigMap (username = "system:node:{{EC2PrivateDNSName}}", groups = ["system:bootstrappers" "system:nodes"])
+2023-10-23 13:58:40 [✔]  deleted 1 nodegroup(s) from cluster "EKS-course-cluster"
