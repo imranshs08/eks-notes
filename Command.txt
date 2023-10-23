@@ -1,0 +1,180 @@
+PS C:\Users\imran\OneDrive - Jamia Millia Islamia (A Central University)\Desktop\EKS> eksctl create cluster -f .\eks-cluster.yml
+2023-10-22 20:53:46 [ℹ]  eksctl version 0.162.0
+2023-10-22 20:53:46 [ℹ]  using region us-west-2
+2023-10-22 20:54:08 [ℹ]  skipping us-west-2d from selection because it doesn't support the following instance type(s): t2.small
+2023-10-22 20:54:08 [ℹ]  setting availability zones to [us-west-2b us-west-2a us-west-2c]
+2023-10-22 20:54:08 [ℹ]  subnets for us-west-2b - public:192.168.0.0/19 private:192.168.96.0/19
+2023-10-22 20:54:08 [ℹ]  subnets for us-west-2a - public:192.168.32.0/19 private:192.168.128.0/19
+2023-10-22 20:54:08 [ℹ]  subnets for us-west-2c - public:192.168.64.0/19 private:192.168.160.0/19
+2023-10-22 20:54:29 [ℹ]  nodegroup "ng-1" will use "ami-084cf519d356bb718" [AmazonLinux2/1.27]
+2023-10-22 20:54:30 [ℹ]  using EC2 key pair "eks-course"
+2023-10-22 20:54:30 [ℹ]  using Kubernetes version 1.27
+2023-10-22 20:54:30 [ℹ]  creating EKS cluster "EKS-course-cluster" in "us-west-2" region with un-managed nodes
+2023-10-22 20:54:30 [ℹ]  1 nodegroup (ng-1) was included (based on the include/exclude rules)
+2023-10-22 20:54:30 [ℹ]  will create a CloudFormation stack for cluster itself and 1 nodegroup stack(s)
+2023-10-22 20:54:30 [ℹ]  will create a CloudFormation stack for cluster itself and 0 managed nodegroup stack(s)
+2023-10-22 20:54:30 [ℹ]  if you encounter any issues, check CloudFormation console or try 'eksctl utils describe-stacks --region=us-west-2 --cluster=EKS-course-cluster'
+2023-10-22 20:54:30 [ℹ]  Kubernetes API endpoint access will use default of {publicAccess=true, privateAccess=false} for cluster "EKS-course-cluster" in "us-west-2"
+2023-10-22 20:54:30 [ℹ]  CloudWatch logging will not be enabled for cluster "EKS-course-cluster" in "us-west-2"
+2023-10-22 20:54:30 [ℹ]  you can enable it with 'eksctl utils update-cluster-logging --enable-types={SPECIFY-YOUR-LOG-TYPES-HERE (e.g. all)} --region=us-west-2 --cluster=EKS-course-cluster'
+2023-10-22 20:54:30 [ℹ]
+2 sequential tasks: { create cluster control plane "EKS-course-cluster",
+    2 sequential sub-tasks: {
+        wait for control plane to become ready,
+        create nodegroup "ng-1",
+    }
+}
+2023-10-22 20:54:30 [ℹ]  building cluster stack "eksctl-EKS-course-cluster-cluster"
+2023-10-22 20:54:51 [ℹ]  deploying stack "eksctl-EKS-course-cluster-cluster"
+2023-10-22 20:55:21 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-cluster"
+2023-10-22 20:56:13 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-cluster"
+2023-10-22 20:57:34 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-cluster"
+2023-10-22 20:58:56 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-cluster"
+2023-10-22 21:00:17 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-cluster"
+2023-10-22 21:01:39 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-cluster"
+2023-10-22 21:03:00 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-cluster"
+2023-10-22 21:04:21 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-cluster"
+2023-10-22 21:07:50 [ℹ]  building nodegroup stack "eksctl-EKS-course-cluster-nodegroup-ng-1"
+2023-10-22 21:07:50 [ℹ]  --nodes-min=3 was set automatically for nodegroup ng-1
+2023-10-22 21:07:50 [ℹ]  --nodes-max=3 was set automatically for nodegroup ng-1
+2023-10-22 21:08:34 [ℹ]  deploying stack "eksctl-EKS-course-cluster-nodegroup-ng-1"
+2023-10-22 21:08:34 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-ng-1"
+2023-10-22 21:09:25 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-ng-1"
+2023-10-22 21:10:43 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-ng-1"
+2023-10-22 21:12:58 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-ng-1"
+2023-10-22 21:14:57 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-ng-1"
+2023-10-22 21:14:57 [ℹ]  waiting for the control plane to become ready
+2023-10-22 21:14:59 [✔]  saved kubeconfig as "C:\\Users\\imran\\.kube\\config"
+2023-10-22 21:14:59 [ℹ]  no tasks
+2023-10-22 21:14:59 [✔]  all EKS cluster resources for "EKS-course-cluster" have been created
+2023-10-22 21:15:20 [ℹ]  adding identity "arn:aws:iam::980779205835:role/eksctl-EKS-course-cluster-nodegrou-NodeInstanceRole-0MkWS3rJb3mm" to auth ConfigMap
+2023-10-22 21:15:21 [ℹ]  nodegroup "ng-1" has 1 node(s)
+2023-10-22 21:15:21 [ℹ]  node "ip-192-168-85-127.us-west-2.compute.internal" is not ready
+2023-10-22 21:15:21 [ℹ]  waiting for at least 3 node(s) to become ready in "ng-1"
+2023-10-22 21:16:26 [ℹ]  nodegroup "ng-1" has 3 node(s)
+2023-10-22 21:16:26 [ℹ]  node "ip-192-168-12-186.us-west-2.compute.internal" is ready
+2023-10-22 21:16:26 [ℹ]  node "ip-192-168-56-55.us-west-2.compute.internal" is ready
+2023-10-22 21:16:26 [ℹ]  node "ip-192-168-85-127.us-west-2.compute.internal" is ready
+2023-10-22 21:16:39 [ℹ]  kubectl command should work with "C:\\Users\\imran\\.kube\\config", try 'kubectl get nodes'
+2023-10-22 21:16:39 [✔]  EKS cluster "EKS-course-cluster" in "us-west-2" region is ready
+
+
+NodeGroup Scale
+
+eksctl scale nodegroup --cluster EKS-course-cluster --nodes 5 --nodes-max 5 --name ng-1
+
+Output
+
+2023-10-23 12:28:16 [ℹ]  scaling nodegroup "ng-1" in cluster EKS-course-cluster
+2023-10-23 12:29:45 [ℹ]  initiated scaling of nodegroup
+2023-10-23 12:29:45 [ℹ]  to see the status of the scaling run `eksctl get nodegroup --cluster EKS-course-cluster --region us-west-2 --name ng-1`
+
+Scaling Down again
+
+eksctl scale nodegroup --cluster EKS-course-cluster --nodes 3 --nodes-max 3 --name ng-1
+
+
+#Lec 11 - Adding a NodeGroup Containing a Mix of OnDemand & Spot Instances
+
+YAML File - eks-cluster.yml
+
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: EKS-course-cluster
+  region: us-west-2
+
+nodeGroups:
+  - name: ng-1
+    instanceType: t2.small
+    desiredCapacity: 3
+    ssh:
+      publicKeyName: eks-course
+  - name: ng-mixed
+    minSize: 3
+    maxSize: 5
+    instancesDistribution:
+      maxPrice: 0.2
+      instanceTypes: ["t2.small", "t3.small"]
+      onDemandBaseCapacity: 0       
+      onDemandPercentageAboveBaseCapacity: 50
+    ssh:
+      publicKeyName: eks-course
+	  
+Command
+
+ksctl create nodegroup --config-file=eks-cluster.yml --include='ng-mixed'
+
+Output 
+
+2023-10-23 12:42:36 [ℹ]  will use version 1.27 for new nodegroup(s) based on control plane version
+2023-10-23 12:44:05 [ℹ]  nodegroup "ng-1" will use "ami-084cf519d356bb718" [AmazonLinux2/1.27]
+2023-10-23 12:44:06 [ℹ]  using EC2 key pair "eks-course"
+2023-10-23 12:44:06 [ℹ]  nodegroup "ng-mixed" will use "ami-084cf519d356bb718" [AmazonLinux2/1.27]
+2023-10-23 12:44:07 [ℹ]  using EC2 key pair "eks-course"
+2023-10-23 12:44:32 [ℹ]  1 existing nodegroup(s) (ng-1) will be excluded
+2023-10-23 12:44:32 [ℹ]  combined include rules: ng-mixed
+2023-10-23 12:44:32 [ℹ]  1 nodegroup (ng-mixed) was included (based on the include/exclude rules)
+2023-10-23 12:44:32 [ℹ]  will create a CloudFormation stack for each of 1 nodegroups in cluster "EKS-course-cluster"
+2023-10-23 12:44:34 [ℹ]  
+2 sequential tasks: { fix cluster compatibility, 1 task: { 1 task: { create nodegroup "ng-mixed" } } 
+}
+2023-10-23 12:44:34 [ℹ]  checking cluster stack for missing resources
+2023-10-23 12:44:37 [ℹ]  cluster stack has all required resources
+2023-10-23 12:44:38 [ℹ]  building nodegroup stack "eksctl-EKS-course-cluster-nodegroup-ng-mixed"
+2023-10-23 12:44:39 [ℹ]  deploying stack "eksctl-EKS-course-cluster-nodegroup-ng-mixed"
+2023-10-23 12:44:39 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-ng-mixed"
+2023-10-23 12:45:31 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-ng-mixed"
+2023-10-23 12:46:30 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-ng-mixed"
+2023-10-23 12:48:16 [ℹ]  waiting for CloudFormation stack "eksctl-EKS-course-cluster-nodegroup-ng-mixed"
+2023-10-23 12:48:16 [ℹ]  no tasks
+2023-10-23 12:48:37 [ℹ]  adding identity "arn:aws:iam::980779205835:role/eksctl-EKS-course-cluster-nodegrou-NodeInstanceRole-5cpegn0Vm7FR" to auth ConfigMap
+2023-10-23 12:48:38 [ℹ]  nodegroup "ng-mixed" has 0 node(s)
+2023-10-23 12:48:38 [ℹ]  waiting for at least 3 node(s) to become ready in "ng-mixed"
+2023-10-23 12:49:33 [ℹ]  nodegroup "ng-mixed" has 3 node(s)
+2023-10-23 12:49:33 [ℹ]  node "ip-192-168-13-185.us-west-2.compute.internal" is ready
+2023-10-23 12:49:33 [ℹ]  node "ip-192-168-62-231.us-west-2.compute.internal" is ready
+2023-10-23 12:49:33 [ℹ]  node "ip-192-168-79-168.us-west-2.compute.internal" is ready
+2023-10-23 12:49:33 [✔]  created 1 nodegroup(s) in cluster "EKS-course-cluster"
+2023-10-23 12:49:33 [✔]  created 0 managed nodegroup(s) in cluster "EKS-course-cluster"
+2023-10-23 12:49:57 [ℹ]  checking security group configuration for all nodegroups
+2023-10-23 12:49:57 [ℹ]  all nodegroups have up-to-date cloudformation templates
+
+Delete a Node Group
+
+eksctl delete nodegroup --config-file=eks-cluster.yml --include='ng-mixed' --approve
+
+Output
+
+2023-10-23 13:00:48 [ℹ]  comparing 2 nodegroups defined in the given config ("eks-cluster.yml") against remote state
+2023-10-23 13:00:48 [ℹ]  combined include rules: ng-mixed
+2023-10-23 13:00:48 [ℹ]  1 nodegroup (ng-mixed) was included (based on the include/exclude rules)
+2023-10-23 13:01:10 [ℹ]  will drain 1 nodegroup(s) in cluster "EKS-course-cluster"
+2023-10-23 13:01:10 [ℹ]  starting parallel draining, max in-flight of 1
+2023-10-23 13:01:36 [ℹ]  cordon node "ip-192-168-13-185.us-west-2.compute.internal"
+2023-10-23 13:01:36 [ℹ]  cordon node "ip-192-168-62-231.us-west-2.compute.internal"
+2023-10-23 13:01:36 [ℹ]  cordon node "ip-192-168-79-168.us-west-2.compute.internal"
+2023-10-23 13:01:42 [✔]  drained all nodes: [ip-192-168-79-168.us-west-2.compute.internal ip-192-168-13-185.us-west-2.compute.internal ip-192-168-62-231.us-west-2.compute.internal]
+2023-10-23 13:01:42 [ℹ]  will delete 1 nodegroups from cluster "EKS-course-cluster"
+2023-10-23 13:02:05 [ℹ]  1 task: { 1 task: { delete nodegroup "ng-mixed" [async] } }
+2023-10-23 13:02:05 [ℹ]  will delete stack "eksctl-EKS-course-cluster-nodegroup-ng-mixed"
+2023-10-23 13:02:05 [ℹ]  will delete 1 nodegroups from auth ConfigMap in cluster "EKS-course-cluster"
+2023-10-23 13:02:06 [ℹ]  removing identity "arn:aws:iam::980779205835:role/eksctl-EKS-course-cluster-nodegrou-NodeInstanceRole-5cpegn0Vm7FR" from auth ConfigMap (username = "system:node:{{EC2PrivateDNSName}}", groups = ["system:bootstrappers" "system:nodes"])
+2023-10-23 13:02:06 [✔]  deleted 1 nodegroup(s) from cluster "EKS-course-cluster"
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Lec 12 - Cluster AutoScaler Theory
+
+Responsible for Dynamically scale the Nodes within a nodegroup - in and out 
+
+	# Run as deployment
+	# Decide based on CPU & RAM availability/Requests
+	# Multi-AZ vs Single-AZ Scaling
+		* nodegroup with single AZ --> For Stateful workloads
+		* nodegroup multi AZ --------> For Stateless workloads
+    # Mixuture of OnDemand & SpotInstances possible.
+	
+	
+
+
